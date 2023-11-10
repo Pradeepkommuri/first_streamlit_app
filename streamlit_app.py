@@ -31,19 +31,25 @@ try:
   if not fruit_choice:
     streamlit.error("Please select a fruit to get information") 
   else:
-#streamlit.write('The user entered ', fruit_choice)
-#import requests
-    #fruityvice_response = requests.get("https://fruityvice.com/api/fruit/"+ fruit_choice)
-#streamlit.text(fruityvice_response.json())
-# write your own comment -what does the next line do? 
-    #fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())
-# write your own comment - what does this do?
-    #streamlit.dataframe(fruityvice_normalized)
-
     back_from_function= get_fruityvice_data(fruit_choice)
     streamlit.dataframe(back_from_function)
 except URLError as e:
   streamlit.error()
+
+streamlit.Header("The Fruit Load List Contains:")
+
+def get_fruit_load_list():
+  with my_cnx.cursor() as my_cur 
+  my_cur.execute("SELECT * from fruit_load_list")
+  return my_cur.fetchall()
+
+#add Buttong
+
+if streamlit.button('Get Fruit Load List'):
+  my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
+  my_data_row = get_fruit_load_list()
+  streamlit.dataframe(my_data_row)
+
 #donot run anything until troubleshoot completed
 
 streamlit.stop()
